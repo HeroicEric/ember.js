@@ -600,7 +600,7 @@ export default Mixin.create({
     @param {String} [value] optional value to test against.
     @return {Object} found item or `undefined`
     @deprecated Use `findBy` instead
-    @private
+    @public
   */
   findProperty: aliasMethod('findBy'),
 
