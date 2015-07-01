@@ -637,7 +637,7 @@ export default Mixin.create({
     @param {Function} callback The callback to execute
     @param {Object} [target] The target object to use
     @return {Boolean}
-    @private
+    @public
   */
   every(callback, target) {
     return !this.find(function(x, idx, i) {
