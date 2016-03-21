@@ -2,7 +2,6 @@ import Ember from 'ember-metal/core'; // Ember.lookup;
 import EmberObject from 'ember-runtime/system/object';
 import run from 'ember-metal/run_loop';
 import EmberView from 'ember-views/views/view';
-import LegacyEachView from 'ember-views/views/legacy_each_view';
 import { A as emberA } from 'ember-runtime/system/native_array';
 import EmberController from 'ember-runtime/controllers/controller';
 
@@ -41,7 +40,6 @@ QUnit.module('the #each helper', {
     owner = buildOwner();
 
     owner.register('view:toplevel', EmberView.extend());
-    owner.register('view:-legacy-each', LegacyEachView);
 
     view = EmberView.create({
       [OWNER]: owner,
@@ -82,10 +80,6 @@ var assertHTML = function(view, expectedHTML) {
   html = html.replace(/<script[^>]*><\/script>/ig, '').replace(/[\r\n]/g, '');
 
   equal(html, expectedHTML);
-};
-
-var assertText = function(view, expectedText) {
-  equal(view.$().text(), expectedText);
 };
 
 QUnit.test('it renders the template for each item in an array', function() {
@@ -247,207 +241,6 @@ QUnit.test('it works inside a table element', function() {
   runDestroy(tableView);
 });
 
-QUnit.test('it supports {{itemView=}}', function() {
-  runDestroy(view);
-  var itemView = EmberView.extend({
-    template: compile('itemView:{{name}}')
-  });
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people itemView="anItemView"}}'),
-      people: people
-    });
-  }, /Using 'itemView' with '{{each}}'/);
-
-  owner.register('view:anItemView', itemView);
-
-  runAppend(view);
-
-  assertText(view, 'itemView:Steve HoltitemView:Annabelle');
-});
-
-QUnit.test('it defers all normalization of itemView names to the resolver', function() {
-  runDestroy(view);
-  var itemView = EmberView.extend({
-    template: compile('itemView:{{name}}')
-  });
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people itemView="an-item-view"}}'),
-      people: people
-    });
-  }, /Using 'itemView' with '{{each}}'/);
-
-  owner.register('view:an-item-view', itemView);
-  runAppend(view);
-
-  assertText(view, 'itemView:Steve HoltitemView:Annabelle');
-});
-
-QUnit.test('it supports {{itemViewClass=}} via owner', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people itemViewClass="my-view"}}'),
-      people: people
-    });
-  }, /Using 'itemViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  assertText(view, 'Steve HoltAnnabelle');
-});
-
-QUnit.test('it supports {{itemViewClass=}} with each view tagName (DEPRECATED)', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people itemViewClass="my-view" tagName="ul"}}'),
-      people: people
-    });
-  }, /Using 'itemViewClass' with '{{each}}'/);
-
-  runAppend(view);
-  equal(view.$('ul').length, 1, 'rendered ul tag');
-  equal(view.$('ul li').length, 2, 'rendered 2 li tags');
-  equal(view.$('ul li').text(), 'Steve HoltAnnabelle');
-});
-
-QUnit.test('it supports {{itemViewClass=}} with tagName in itemViewClass (DEPRECATED)', function() {
-  runDestroy(view);
-  owner.register('view:li-view', EmberView.extend({
-    tagName: 'li'
-  }));
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('<ul>{{#each view.people itemViewClass="li-view" as |item|}}{{item.name}}{{/each}}</ul>'),
-      people: people
-    });
-  }, /Using 'itemViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  equal(view.$('ul').length, 1, 'rendered ul tag');
-  equal(view.$('ul li').length, 2, 'rendered 2 li tags');
-  equal(view.$('ul li').text(), 'Steve HoltAnnabelle');
-});
-
-QUnit.test('it supports {{itemViewClass=}} with {{else}} block (DEPRECATED)', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile(`
-        {{~#each view.people itemViewClass="my-view" as |item|~}}
-          {{item.name}}
-        {{~else~}}
-          No records!
-        {{~/each}}`),
-      people: emberA()
-    });
-  }, /Using 'itemViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  equal(view.$().text(), 'No records!');
-});
-
-QUnit.test('it supports {{emptyView=}}', function() {
-  runDestroy(view);
-  var emptyView = EmberView.extend({
-    template: compile('emptyView:sad panda')
-  });
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people emptyView="anEmptyView"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyView' with '{{each}}'/);
-
-  owner.register('view:anEmptyView', emptyView);
-
-  runAppend(view);
-
-  assertText(view, 'emptyView:sad panda');
-});
-
-QUnit.test('it defers all normalization of emptyView names to the resolver', function() {
-  runDestroy(view);
-  var emptyView = EmberView.extend({
-    template: compile('emptyView:sad panda')
-  });
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people emptyView="an-empty-view"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyView' with '{{each}}'/);
-
-  owner.register('view:an-empty-view', emptyView);
-
-  runAppend(view);
-
-  assertText(view, 'emptyView:sad panda');
-});
-
-QUnit.test('it supports {{emptyViewClass=}} via owner', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people emptyViewClass="my-empty-view"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  assertText(view, 'I\'m empty');
-});
-
-QUnit.test('it supports {{emptyViewClass=}} with tagName (DEPRECATED)', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people emptyViewClass="my-empty-view" tagName="b"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  equal(view.$('b').length, 1, 'rendered b tag');
-  equal(view.$('b').text(), 'I\'m empty');
-});
-
-QUnit.test('it supports {{emptyViewClass=}} with in format', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each person in view.people emptyViewClass="my-empty-view"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  assertText(view, 'I\'m empty');
-});
-
 QUnit.test('it uses {{else}} when replacing model with an empty array', function() {
   runDestroy(view);
   view = EmberView.create({
@@ -525,7 +318,6 @@ QUnit.module('{{each bar as |foo|}}', {
   setup() {
     owner = buildOwner();
     owner.register('view:toplevel', EmberView.extend());
-    owner.register('view:-legacy-each', LegacyEachView);
   },
   teardown() {
     runDestroy(owner);

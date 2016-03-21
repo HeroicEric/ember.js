@@ -114,6 +114,8 @@ NativeArray = NativeArray.without.apply(NativeArray, ignore);
 
   Example
 
+  TODO: Replace example with something that doesn't use CollectionView
+
   ```js
   var Pagination = Ember.CollectionView.extend({
     tagName: 'ul',
