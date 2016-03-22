@@ -304,22 +304,6 @@ QUnit.test('it supports {{emptyViewClass=}} via owner', function() {
   assertText(view, 'I\'m empty');
 });
 
-QUnit.test('it supports {{emptyViewClass=}} with tagName (DEPRECATED)', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people emptyViewClass="my-empty-view" tagName="b"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  equal(view.$('b').length, 1, 'rendered b tag');
-  equal(view.$('b').text(), 'I\'m empty');
-});
-
 QUnit.test('it supports {{emptyViewClass=}} with in format', function() {
   runDestroy(view);
   expectDeprecation(() => {
