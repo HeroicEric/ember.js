@@ -2,7 +2,6 @@ import Ember from 'ember-metal/core'; // Ember.lookup;
 import EmberObject from 'ember-runtime/system/object';
 import run from 'ember-metal/run_loop';
 import EmberView from 'ember-views/views/view';
-import LegacyEachView from 'ember-views/views/legacy_each_view';
 import { A as emberA } from 'ember-runtime/system/native_array';
 import EmberController from 'ember-runtime/controllers/controller';
 
@@ -36,7 +35,6 @@ QUnit.module('the #each helper', {
     owner = buildOwner();
 
     owner.register('view:toplevel', EmberView.extend());
-    owner.register('view:-legacy-each', LegacyEachView);
 
     view = EmberView.create({
       [OWNER]: owner,
@@ -313,7 +311,6 @@ QUnit.module('{{each bar as |foo|}}', {
   setup() {
     owner = buildOwner();
     owner.register('view:toplevel', EmberView.extend());
-    owner.register('view:-legacy-each', LegacyEachView);
   },
   teardown() {
     runDestroy(owner);

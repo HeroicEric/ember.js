@@ -1,9 +1,0 @@
-{{~#each view._arrangedContent -legacy-keyword=view.keyword as |item|~}}
-  {{~#if view.keyword}}
-    {{~legacy-yield item~}}
-  {{~else~}}
-    {{~legacy-yield item controller=item~}}
-  {{~/if~}}
-{{~else if view._emptyView~}}
-  {{~view view._emptyView~}}
-{{~/each~}}

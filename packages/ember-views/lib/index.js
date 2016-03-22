@@ -32,7 +32,6 @@ import TextField from 'ember-views/views/text_field';
 import TextArea from 'ember-views/views/text_area';
 
 import _MetamorphView, { _Metamorph } from 'ember-views/compat/metamorph_view';
-import LegacyEachView from 'ember-views/views/legacy_each_view';
 
 // END IMPORTS
 
@@ -78,7 +77,6 @@ Ember.EventDispatcher = EventDispatcher;
 if (Ember.ENV._ENABLE_LEGACY_VIEW_SUPPORT) {
   Ember._Metamorph = _Metamorph;
   Ember._MetamorphView = _MetamorphView;
-  Ember._LegacyEachView = LegacyEachView;
 }
 
 // END EXPORTS
