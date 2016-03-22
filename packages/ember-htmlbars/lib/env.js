@@ -79,7 +79,6 @@ import elementComponent from 'ember-htmlbars/keywords/element-component';
 import partial from 'ember-htmlbars/keywords/partial';
 import input from 'ember-htmlbars/keywords/input';
 import textarea from 'ember-htmlbars/keywords/textarea';
-import collection from 'ember-htmlbars/keywords/collection';
 import yieldKeyword from 'ember-htmlbars/keywords/yield';
 import legacyYield from 'ember-htmlbars/keywords/legacy-yield';
 import mut, { privateMut } from 'ember-htmlbars/keywords/mut';
@@ -105,7 +104,6 @@ registerKeyword('readonly', readonly);
 registerKeyword('get', getKeyword);
 
 if (_Ember.ENV._ENABLE_LEGACY_VIEW_SUPPORT) {
-  registerKeyword('collection', collection);
   registerKeyword('view', view);
 }
 

@@ -11,9 +11,6 @@ import { runAppend, runDestroy } from 'ember-runtime/tests/utils';
 
 import compile from 'ember-template-compiler/system/compile';
 
-import { registerAstPlugin, removeAstPlugin } from 'ember-htmlbars/tests/utils';
-import TransformEachIntoCollection from 'ember-template-compiler/plugins/transform-each-into-collection';
-
 import { registerKeyword, resetKeyword } from 'ember-htmlbars/tests/utils';
 import viewKeyword from 'ember-htmlbars/keywords/view';
 
@@ -32,8 +29,6 @@ QUnit.module('the #each helper', {
     Ember.lookup = lookup = { Ember: Ember };
 
     originalViewKeyword = registerKeyword('view',  viewKeyword);
-
-    registerAstPlugin(TransformEachIntoCollection);
 
     template = compile('{{#each view.people as |person|}}{{person.name}}{{/each}}');
     people = emberA([{ name: 'Steve Holt' }, { name: 'Annabelle' }]);
@@ -69,8 +64,6 @@ QUnit.module('the #each helper', {
 
     Ember.lookup = originalLookup;
 
-    removeAstPlugin(TransformEachIntoCollection);
-
     resetKeyword('view', originalViewKeyword);
   }
 });
@@ -82,10 +75,6 @@ var assertHTML = function(view, expectedHTML) {
   html = html.replace(/<script[^>]*><\/script>/ig, '').replace(/[\r\n]/g, '');
 
   equal(html, expectedHTML);
-};
-
-var assertText = function(view, expectedText) {
-  equal(view.$().text(), expectedText);
 };
 
 QUnit.test('it renders the template for each item in an array', function() {
@@ -245,78 +234,6 @@ QUnit.test('it works inside a table element', function() {
   equal(tableView.$('td').length, 4, 'renders an additional <td> when an object is inserted at the beginning of the array');
 
   runDestroy(tableView);
-});
-
-QUnit.test('it supports {{emptyView=}}', function() {
-  runDestroy(view);
-  var emptyView = EmberView.extend({
-    template: compile('emptyView:sad panda')
-  });
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people emptyView="anEmptyView"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyView' with '{{each}}'/);
-
-  owner.register('view:anEmptyView', emptyView);
-
-  runAppend(view);
-
-  assertText(view, 'emptyView:sad panda');
-});
-
-QUnit.test('it defers all normalization of emptyView names to the resolver', function() {
-  runDestroy(view);
-  var emptyView = EmberView.extend({
-    template: compile('emptyView:sad panda')
-  });
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people emptyView="an-empty-view"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyView' with '{{each}}'/);
-
-  owner.register('view:an-empty-view', emptyView);
-
-  runAppend(view);
-
-  assertText(view, 'emptyView:sad panda');
-});
-
-QUnit.test('it supports {{emptyViewClass=}} via owner', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people emptyViewClass="my-empty-view"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  assertText(view, 'I\'m empty');
-});
-
-QUnit.test('it supports {{emptyViewClass=}} with in format', function() {
-  runDestroy(view);
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each person in view.people emptyViewClass="my-empty-view"}}'),
-      people: emberA()
-    });
-  }, /Using 'emptyViewClass' with '{{each}}'/);
-
-  runAppend(view);
-
-  assertText(view, 'I\'m empty');
 });
 
 QUnit.test('it uses {{else}} when replacing model with an empty array', function() {

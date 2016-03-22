@@ -44,8 +44,7 @@ function validate(node) {
   if ((node.type === 'BlockStatement' || node.type === 'MustacheStatement') && node.path.original === 'each') {
     return any(node.hash.pairs, pair => {
       let key = pair.key;
-      return key === 'emptyView' ||
-             key === 'emptyViewClass';
+      return key === 'emptyViewClass';
     });
   }
 
