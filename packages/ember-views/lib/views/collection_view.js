@@ -41,41 +41,6 @@ import { getOwner } from 'container/owner';
   The view for each item in the collection will have its `content` property set
   to the item.
 
-  ## Specifying `itemViewClass`
-
-  By default the view class for each item in the managed collection will be an
-  instance of `Ember.View`. You can supply a different class by setting the
-  `CollectionView`'s `itemViewClass` property.
-
-  Given the following application code:
-
-  ```javascript
-  var App = Ember.Application.create();
-  App.ItemListView = Ember.CollectionView.extend({
-    classNames: ['a-collection'],
-    content: ['A','B','C'],
-    itemViewClass: Ember.View.extend({
-      template: Ember.HTMLBars.compile("the letter: {{view.content}}")
-    })
-  });
-  ```
-
-  And a simple application template:
-
-  ```handlebars
-  {{view 'item-list'}}
-  ```
-
-  The following HTML will result:
-
-  ```html
-  <div class="ember-view a-collection">
-    <div class="ember-view">the letter: A</div>
-    <div class="ember-view">the letter: B</div>
-    <div class="ember-view">the letter: C</div>
-  </div>
-  ```
-
   ## Automatic matching of parent/child tagNames
 
   Setting the `tagName` property of a `CollectionView` to any of

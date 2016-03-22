@@ -12,7 +12,7 @@ QUnit.module('ember-template-compiler: transform-each-into-collection', {
   }
 });
 
-let deprecatedAttrs = ['itemController', 'itemViewClass', 'tagName', 'emptyView', 'emptyViewClass'];
+let deprecatedAttrs = ['itemController', 'tagName', 'emptyView', 'emptyViewClass'];
 
 function testBlockForm(attr) {
   QUnit.test(`Using the '${attr}' hash argument with a block results in a deprecation`, function() {

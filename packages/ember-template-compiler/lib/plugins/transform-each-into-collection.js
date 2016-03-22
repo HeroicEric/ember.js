@@ -45,7 +45,6 @@ function validate(node) {
     return any(node.hash.pairs, pair => {
       let key = pair.key;
       return key === 'itemController' ||
-             key === 'itemViewClass' ||
              key === 'tagName' ||
              key === 'emptyView' ||
              key === 'emptyViewClass';

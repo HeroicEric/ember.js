@@ -35,10 +35,6 @@ function nthChild(view, nth) {
 
 var firstChild = nthChild;
 
-function firstGrandchild(view) {
-  return objectAt(get(objectAt(get(view, 'childViews'), 0), 'childViews'), 0);
-}
-
 QUnit.module('collection helper [LEGACY]', {
   setup() {
     originalViewKeyword = registerKeyword('view',  viewKeyword);
@@ -62,66 +58,6 @@ QUnit.module('collection helper [LEGACY]', {
     resetKeyword('view', originalViewKeyword);
   }
 });
-
-QUnit.test('Collection views that specify an example view class have their children be of that class', function() {
-  var ExampleViewCollection = CollectionView.extend({
-    itemViewClass: EmberView.extend({
-      isCustom: true
-    }),
-
-    content: emberA(['foo'])
-  });
-
-  view = EmberView.create({
-    exampleViewCollection: ExampleViewCollection,
-    template: compile('{{#collection view.exampleViewCollection}}OHAI{{/collection}}')
-  });
-
-  runAppend(view);
-
-  ok(firstGrandchild(view).isCustom, 'uses the example view class');
-});
-
-QUnit.test('itemViewClass works in the #collection helper with a property', function() {
-  var ExampleItemView = EmberView.extend({
-    isAlsoCustom: true
-  });
-
-  var ExampleCollectionView = CollectionView;
-
-  view = EmberView.create({
-    possibleItemView: ExampleItemView,
-    exampleCollectionView: ExampleCollectionView,
-    exampleController: ArrayProxy.create({
-      content: emberA(['alpha'])
-    }),
-    template: compile('{{#collection view.exampleCollectionView content=view.exampleController itemViewClass=view.possibleItemView}}beta{{/collection}}')
-  });
-
-  runAppend(view);
-
-  ok(firstGrandchild(view).isAlsoCustom, 'uses the example view class specified in the #collection helper');
-});
-
-QUnit.test('itemViewClass works in the #collection via container', function() {
-  owner.register('view:example-item', EmberView.extend({
-    isAlsoCustom: true
-  }));
-
-  view = EmberView.create({
-    [OWNER]: owner,
-    exampleCollectionView: CollectionView.extend(),
-    exampleController: ArrayProxy.create({
-      content: emberA(['alpha'])
-    }),
-    template: compile('{{#collection view.exampleCollectionView content=view.exampleController itemViewClass="example-item"}}beta{{/collection}}')
-  });
-
-  runAppend(view);
-
-  ok(firstGrandchild(view).isAlsoCustom, 'uses the example view class specified in the #collection helper');
-});
-
 
 QUnit.test('passing a block to the collection helper sets it as the template for example views', function() {
   var CollectionTestView = CollectionView.extend({

@@ -51,43 +51,6 @@ import assign from 'ember-metal/assign';
   </div>
   ```
 
-  ### Non-block version of collection
-
-  If you provide an `itemViewClass` option that has its own `template`,
-  then you may omit the block.
-
-  The following template:
-
-  ```handlebars
-  {{! application.hbs }}
-  {{collection content=model itemViewClass="an-item"}}
-  ```
-
-  And application code
-
-  ```javascript
-  App = Ember.Application.create();
-  App.ApplicationRoute = Ember.Route.extend({
-    model() {
-      return [{name: 'Yehuda'},{name: 'Tom'},{name: 'Peter'}];
-    }
-  });
-
-  App.AnItemView = Ember.View.extend({
-    template: Ember.Handlebars.compile("Greetings {{view.content.name}}")
-  });
-  ```
-
-  Will result in the HTML structure below
-
-  ```html
-  <div class="ember-view">
-    <div class="ember-view">Greetings Yehuda</div>
-    <div class="ember-view">Greetings Tom</div>
-    <div class="ember-view">Greetings Peter</div>
-  </div>
-  ```
-
   ### Specifying a CollectionView subclass
 
   By default the `{{collection}}` helper will create an instance of
