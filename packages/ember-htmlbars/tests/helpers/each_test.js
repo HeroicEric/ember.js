@@ -247,47 +247,6 @@ QUnit.test('it works inside a table element', function() {
   runDestroy(tableView);
 });
 
-QUnit.test('it supports {{itemView=}}', function() {
-  runDestroy(view);
-  var itemView = EmberView.extend({
-    template: compile('itemView:{{name}}')
-  });
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people itemView="anItemView"}}'),
-      people: people
-    });
-  }, /Using 'itemView' with '{{each}}'/);
-
-  owner.register('view:anItemView', itemView);
-
-  runAppend(view);
-
-  assertText(view, 'itemView:Steve HoltitemView:Annabelle');
-});
-
-QUnit.test('it defers all normalization of itemView names to the resolver', function() {
-  runDestroy(view);
-  var itemView = EmberView.extend({
-    template: compile('itemView:{{name}}')
-  });
-
-  expectDeprecation(() => {
-    view = EmberView.create({
-      [OWNER]: owner,
-      template: compile('{{each view.people itemView="an-item-view"}}'),
-      people: people
-    });
-  }, /Using 'itemView' with '{{each}}'/);
-
-  owner.register('view:an-item-view', itemView);
-  runAppend(view);
-
-  assertText(view, 'itemView:Steve HoltitemView:Annabelle');
-});
-
 QUnit.test('it supports {{itemViewClass=}} via owner', function() {
   runDestroy(view);
   expectDeprecation(() => {

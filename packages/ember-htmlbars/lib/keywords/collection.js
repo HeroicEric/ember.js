@@ -163,10 +163,6 @@ export default {
       };
     }
 
-    if (hash.itemView) {
-      hash.itemViewClass = hash.itemView;
-    }
-
     if (hash.emptyView) {
       hash.emptyViewClass = hash.emptyView;
     }
