@@ -382,7 +382,7 @@ function buildItemViewProps(template, attrs) {
   // Go through options passed to the {{collection}} helper and extract options
   // that configure item views instead of the collection itself.
   for (var prop in attrs) {
-    if (prop === 'itemViewClass' || prop === 'itemController' || prop === 'itemClassBinding') {
+    if (prop === 'itemViewClass' || prop === 'itemClassBinding') {
       continue;
     }
     if (attrs.hasOwnProperty(prop)) {
