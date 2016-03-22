@@ -425,6 +425,8 @@ run.scheduleOnce = function(/*queue, target, method*/) {
   by the `ember-views` package, along with the preceding `render` queue
   where all the DOM element operations happen). Example:
 
+  TODO: Update example to not use CollectionView
+
   ```javascript
   App.MyCollectionView = Ember.CollectionView.extend({
     didInsertElement: function() {
